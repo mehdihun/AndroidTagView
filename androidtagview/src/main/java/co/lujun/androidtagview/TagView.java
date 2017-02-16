@@ -356,7 +356,7 @@ public class TagView extends View {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         int action = event.getAction();
-        if (action == MotionEvent.ACTION_DOWN) {
+        if (action == MotionEvent.ACTION_UP) {
             mRippleRadius = 0.0f;
             mTouchX = event.getX();
             mTouchY = event.getY();
