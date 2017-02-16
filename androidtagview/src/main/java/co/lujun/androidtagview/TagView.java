@@ -30,7 +30,7 @@ public class TagView extends View {
     /**
      * Selected status
      **/
-    private boolean selected = false;
+    private boolean tagSelected = false;
 
     /**
      * Border width
@@ -183,7 +183,7 @@ public class TagView extends View {
                 int state = ((TagContainerLayout) getParent()).getTagViewState();
                 if (state == ViewDragHelper.STATE_IDLE) {
                     isExecLongClick = true;
-                    mOnTagClickListener.onTagLongClick((int) getTag(), selected, getText());
+                    mOnTagClickListener.onTagLongClick((int) getTag(), tagSelected, getText());
                 }
             }
         }
@@ -246,7 +246,7 @@ public class TagView extends View {
     protected void onDraw(Canvas canvas) {
         // draw background
         mPaint.setStyle(Paint.Style.FILL);
-        mPaint.setColor(selected ? mSelectedBackgroundColor : mBackgroundColor);
+        mPaint.setColor(tagSelected ? mSelectedBackgroundColor : mBackgroundColor);
         canvas.drawRoundRect(mRectF, mBorderRadius, mBorderRadius, mPaint);
 
         // draw border
@@ -260,7 +260,7 @@ public class TagView extends View {
 
         // draw text
         mPaint.setStyle(Paint.Style.FILL);
-        mPaint.setColor(selected ? mSelectedTextColor : mTextColor);
+        mPaint.setColor(tagSelected ? mSelectedTextColor : mTextColor);
 
         if (mTextDirection == View.TEXT_DIRECTION_RTL) {
             float tmpX = (isEnableCross() ? getWidth() + getHeight() : getWidth()) / 2 + fontW / 2;
@@ -307,18 +307,18 @@ public class TagView extends View {
 
             // Draw badge background
             mPaint.setStyle(Paint.Style.FILL);
-            mPaint.setColor(selected ? mBadgeSelectedBackgroundColor : mBadgeBackgroundColor);
+            mPaint.setColor(tagSelected ? mBadgeSelectedBackgroundColor : mBadgeBackgroundColor);
             canvas.drawRoundRect(mBadgeRectF, mBadgeBorderRadius, mBadgeBorderRadius, mPaint);
 
             // Draw badge stroke
             mPaint.setStyle(Paint.Style.STROKE);
             mPaint.setStrokeWidth(badgeStroke);
-            mPaint.setColor(selected ? mBadgeSelectedStrokeColor : mBadgeStrokeColor);
+            mPaint.setColor(tagSelected ? mBadgeSelectedStrokeColor : mBadgeStrokeColor);
             canvas.drawRoundRect(mBadgeRectF, mBadgeBorderRadius, mBadgeBorderRadius, mPaint);
 
             // Draw badge text
             mTextPaint.setStyle(Paint.Style.FILL);
-            mTextPaint.setColor(selected ? mBadgeSelectedTextColor : mBadgeTextColor);
+            mTextPaint.setColor(tagSelected ? mBadgeSelectedTextColor : mBadgeTextColor);
             canvas.drawText(mBadgeText, mBadgeRectF.left + badgeStroke + txtRect.width() * marginPercentageH, mBadgeRectF.bottom - badgeStroke - txtRect.height() * marginPercentageV, mTextPaint);
         }
     }
@@ -393,10 +393,11 @@ public class TagView extends View {
                     if (!isExecLongClick && !isMoved) {
 
                         splashRipple();
-                        selected = !selected;
+                        tagSelected = !tagSelected;
+                        invalidate();
                         requestLayout();
 
-                        mOnTagClickListener.onTagClick((int) getTag(), selected, getText());
+                        mOnTagClickListener.onTagClick((int) getTag(), tagSelected, getText());
                     }
                     break;
             }
