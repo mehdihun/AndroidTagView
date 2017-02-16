@@ -1262,4 +1262,52 @@ public class TagContainerLayout extends ViewGroup {
     public void setCrossLineWidth(float mCrossLineWidth) {
         this.mCrossLineWidth = mCrossLineWidth;
     }
+
+    public int getmTagBadgeBackgroundColor() {
+        return mTagBadgeBackgroundColor;
+    }
+
+    public void setTagBadgeBackgroundColor(int mTagBadgeBackgroundColor) {
+        this.mTagBadgeBackgroundColor = mTagBadgeBackgroundColor;
+    }
+
+    public int getTagBadgeSelectedBackgroundColor() {
+        return mTagBadgeSelectedBackgroundColor;
+    }
+
+    public void setTagBadgeSelectedBackgroundColor(int mTagBadgeSelectedBackgroundColor) {
+        this.mTagBadgeSelectedBackgroundColor = mTagBadgeSelectedBackgroundColor;
+    }
+
+    public int getTagBadgeTextColor() {
+        return mTagBadgeTextColor;
+    }
+
+    public void setTagBadgeTextColor(int mTagBadgeTextColor) {
+        this.mTagBadgeTextColor = mTagBadgeTextColor;
+    }
+
+    public int getTagBadgeSelectedTextColor() {
+        return mTagBadgeSelectedTextColor;
+    }
+
+    public void setTagBadgeSelectedTextColor(int mTagBadgeSelectedTextColor) {
+        this.mTagBadgeSelectedTextColor = mTagBadgeSelectedTextColor;
+    }
+
+    public int getTagBadgeStrokeColor() {
+        return mTagBadgeStrokeColor;
+    }
+
+    public void setTagBadgeStrokeColor(int mTagBadgeStrokeColor) {
+        this.mTagBadgeStrokeColor = mTagBadgeStrokeColor;
+    }
+
+    public int getTagBadgeSelectedStrokeColor() {
+        return mTagBadgeSelectedStrokeColor;
+    }
+
+    public void setTagBadgeSelectedStrokeColor(int mTagBadgeSelectedStrokeColor) {
+        this.mTagBadgeSelectedStrokeColor = mTagBadgeSelectedStrokeColor;
+    }
 }
