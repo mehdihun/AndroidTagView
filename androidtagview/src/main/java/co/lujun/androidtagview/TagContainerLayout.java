@@ -9,6 +9,7 @@ import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.support.v4.widget.ViewDragHelper;
 import android.util.AttributeSet;
+import android.util.Pair;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -100,7 +101,7 @@ public class TagContainerLayout extends ViewGroup {
     private boolean isTagViewClickable;
 
     /** Tags*/
-    private List<String> mTags;
+    private List<Pair<String, String>> mTags;
 
     /** Can drag TagView(default false)*/
     private boolean mDragEnable;
@@ -156,6 +157,17 @@ public class TagContainerLayout extends ViewGroup {
 
     /** The cross line width(default 1dp)*/
     private float mCrossLineWidth = 1.0f;
+
+    /** BADGE **/
+
+    private int mTagBadgeBackgroundColor = Color.parseColor("#FFFF0800");
+    private int mTagBadgeSelectedBackgroundColor = Color.parseColor("#FFFFA343");
+
+    private int mTagBadgeTextColor = Color.parseColor("#FFFFFFFF");
+    private int mTagBadgeSelectedTextColor = Color.parseColor("#FF000000");
+
+    private int mTagBadgeStrokeColor = Color.parseColor("#FFFFFFFF");
+    private int mTagBadgeSelectedStrokeColor = Color.parseColor("#FF000000");
 
     public TagContainerLayout(Context context) {
         this(context, null);
@@ -227,6 +239,14 @@ public class TagContainerLayout extends ViewGroup {
         mCrossColor = attributes.getColor(R.styleable.AndroidTagView_tag_cross_color, mCrossColor);
         mCrossLineWidth = attributes.getDimension(R.styleable.AndroidTagView_tag_cross_line_width,
                 dp2px(context, mCrossLineWidth));
+
+        mTagBadgeBackgroundColor = attributes.getColor(R.styleable.AndroidTagView_tag_badge_background_color, mTagBadgeBackgroundColor);
+        mTagBadgeSelectedBackgroundColor = attributes.getColor(R.styleable.AndroidTagView_tag_badge_selected_background_color, mTagBadgeSelectedBackgroundColor);
+        mTagBadgeTextColor = attributes.getColor(R.styleable.AndroidTagView_tag_badge_text_color, mTagBadgeTextColor);
+        mTagBadgeSelectedTextColor = attributes.getColor(R.styleable.AndroidTagView_tag_badge_selected_text_color, mTagBadgeSelectedTextColor);
+        mTagBadgeStrokeColor = attributes.getColor(R.styleable.AndroidTagView_tag_badge_stroke_color, mTagBadgeStrokeColor);
+        mTagBadgeSelectedStrokeColor = attributes.getColor(R.styleable.AndroidTagView_tag_badge_selected_stroke_color, mTagBadgeSelectedStrokeColor);
+
         attributes.recycle();
 
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -239,7 +259,7 @@ public class TagContainerLayout extends ViewGroup {
         setTagVerticalPadding(mTagVerticalPadding);
 
         if (isInEditMode()) {
-            addTag("sample tag");
+            addTag("sample tag", null);
         }
     }
 
@@ -414,12 +434,12 @@ public class TagContainerLayout extends ViewGroup {
             return;
         }
         for (int i = 0; i < mTags.size(); i++) {
-            onAddTag(mTags.get(i), mChildViews.size());
+            onAddTag(mTags.get(i).first, mTags.get(i).second, mChildViews.size());
         }
         postInvalidate();
     }
 
-    private void onAddTag(String text, int position) {
+    private void onAddTag(String text, String badgeText, int position) {
         if (position < 0 || position > mChildViews.size()){
             throw new RuntimeException("Illegal position!");
         }
@@ -433,6 +453,8 @@ public class TagContainerLayout extends ViewGroup {
         }else {
             tagView.setTag(position);
         }
+
+        tagView.setBadgeText(badgeText);
         addView(tagView, position);
     }
 
@@ -462,6 +484,13 @@ public class TagContainerLayout extends ViewGroup {
         tagView.setCrossAreaPadding(mCrossAreaPadding);
         tagView.setCrossColor(mCrossColor);
         tagView.setCrossLineWidth(mCrossLineWidth);
+
+        tagView.setBadgeBackgroundColor(mTagBadgeBackgroundColor);
+        tagView.setBadgeSelectedBackgroundColor(mTagBadgeSelectedBackgroundColor);
+        tagView.setBadgeTextColor(mTagBadgeTextColor);
+        tagView.setBadgeSelectedTextColor(mTagBadgeSelectedTextColor);
+        tagView.setBadgeStrokeColor(mTagBadgeStrokeColor);
+        tagView.setBadgeSelectedStrokeColor(mTagBadgeSelectedStrokeColor);
     }
 
     private void invalidateTags(){
@@ -617,7 +646,7 @@ public class TagContainerLayout extends ViewGroup {
      * Set tags
      * @param tags
      */
-    public void setTags(List<String> tags){
+    public void setTags(List<Pair<String, String>> tags){
         mTags = tags;
         onSetTag();
     }
@@ -626,7 +655,7 @@ public class TagContainerLayout extends ViewGroup {
      * Set tags
      * @param tags
      */
-    public void setTags(String... tags){
+    public void setTags(Pair<String, String>... tags){
         mTags = Arrays.asList(tags);
         onSetTag();
     }
@@ -635,8 +664,8 @@ public class TagContainerLayout extends ViewGroup {
      * Inserts the specified TagView into this ContainerLayout at the end.
      * @param text
      */
-    public void addTag(String text){
-        addTag(text, mChildViews.size());
+    public void addTag(String text, String badgeText){
+        addTag(text, badgeText, mChildViews.size());
     }
 
     /**
@@ -645,8 +674,8 @@ public class TagContainerLayout extends ViewGroup {
      * @param text
      * @param position
      */
-    public void addTag(String text, int position){
-        onAddTag(text, position);
+    public void addTag(String text, String badgeText, int position){
+        onAddTag(text, badgeText, position);
         postInvalidate();
     }
 

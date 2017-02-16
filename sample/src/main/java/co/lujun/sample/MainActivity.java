@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,16 +32,16 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        List<String> list1 = new ArrayList<String>();
-        list1.add("Java");
-        list1.add("C++");
-        list1.add("Python");
-        list1.add("Swift");
-        list1.add("你好，这是一个TAG。你好，这是一个TAG。你好，这是一个TAG。你好，这是一个TAG。");
-        list1.add("PHP");
-        list1.add("JavaScript");
-        list1.add("Html");
-        list1.add("Welcome to use AndroidTagView!");
+        List<Pair<String,String>> list1 = new ArrayList<Pair<String, String>>();
+        list1.add(new Pair<String, String>("Java", "100kr"));
+        list1.add(new Pair<String, String>("C++", "2kr"));
+        list1.add(new Pair<String, String>("Python", "3kr"));
+        list1.add(new Pair<String, String>("Swift", "4kr"));
+        list1.add(new Pair<String, String>("你好，这是一个TAG。你好，这是一个TAG。你好，这是一个TAG。你好，这是一个TAG。", "5kr"));
+        list1.add(new Pair<String, String>("PHP", "6kr"));
+        list1.add(new Pair<String, String>("JavaScript", "7kr"));
+        list1.add(new Pair<String, String>("Html", "8kr"));
+        list1.add(new Pair<String, String>("Welcome to use AndroidTagView!", "9kr"));
 
         List<String> list2 = new ArrayList<String>();
         list2.add("China");
@@ -122,16 +123,16 @@ public class MainActivity extends AppCompatActivity {
 
         // After you set your own attributes for TagView, then set tag(s) or add tag(s)
         mTagContainerLayout1.setTags(list1);
-        mTagContainerLayout2.setTags(list2);
-        mTagContainerLayout3.setTags(list3);
-        mTagContainerLayout4.setTags(list4);
+//        mTagContainerLayout2.setTags(list2);
+//        mTagContainerLayout3.setTags(list3);
+//        mTagContainerLayout4.setTags(list4);
 
         final EditText text = (EditText) findViewById(R.id.text_tag);
         Button btnAddTag = (Button) findViewById(R.id.btn_add_tag);
         btnAddTag.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mTagContainerLayout1.addTag(text.getText().toString());
+//                mTagContainerLayout1.addTag(text.getText().toString());
                 // Add tag in the specified position
 //                mTagContainerLayout1.addTag(text.getText().toString(), 4);
             }
@@ -153,59 +154,59 @@ public class MainActivity extends AppCompatActivity {
 //        recyclerView.setAdapter(adapter);
     }
 
-    public class TagRecyclerViewAdapter
-            extends RecyclerView.Adapter<TagRecyclerViewAdapter.TagViewHolder>{
-
-        private Context mContext;
-        private String[] mData;
-        private View.OnClickListener mOnClickListener;
-
-        public TagRecyclerViewAdapter(Context context, String[] data){
-            this.mContext = context;
-            this.mData = data;
-        }
-
-        @Override
-        public int getItemCount() {
-            return 10;
-        }
-
-        @Override
-        public TagViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            return new TagViewHolder(LayoutInflater.from(mContext)
-                    .inflate(R.layout.view_recyclerview_item, parent, false), mOnClickListener);
-        }
-
-        @Override
-        public void onBindViewHolder(TagViewHolder holder, int position) {
-            holder.tagContainerLayout.setTags(mData);
-            holder.button.setOnClickListener(mOnClickListener);
-        }
-
-        public void setOnClickListener(View.OnClickListener listener){
-            this.mOnClickListener = listener;
-        }
-
-        class TagViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
-
-            TagContainerLayout tagContainerLayout;
-            View.OnClickListener clickListener;
-            Button button;
-
-            public TagViewHolder(View v, View.OnClickListener listener){
-                super(v);
-                this.clickListener = listener;
-                tagContainerLayout = (TagContainerLayout) v.findViewById(R.id.tagcontainerLayout);
-                button = (Button) v.findViewById(R.id.button);
-//                v.setOnClickListener(this);
-            }
-
-            @Override
-            public void onClick(View v) {
-                if (clickListener != null){
-                    clickListener.onClick(v);
-                }
-            }
-        }
-    }
+//    public class TagRecyclerViewAdapter
+//            extends RecyclerView.Adapter<TagRecyclerViewAdapter.TagViewHolder>{
+//
+//        private Context mContext;
+//        private String[] mData;
+//        private View.OnClickListener mOnClickListener;
+//
+//        public TagRecyclerViewAdapter(Context context, String[] data){
+//            this.mContext = context;
+//            this.mData = data;
+//        }
+//
+//        @Override
+//        public int getItemCount() {
+//            return 10;
+//        }
+//
+//        @Override
+//        public TagViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+//            return new TagViewHolder(LayoutInflater.from(mContext)
+//                    .inflate(R.layout.view_recyclerview_item, parent, false), mOnClickListener);
+//        }
+//
+//        @Override
+//        public void onBindViewHolder(TagViewHolder holder, int position) {
+//            holder.tagContainerLayout.setTags(mData);
+//            holder.button.setOnClickListener(mOnClickListener);
+//        }
+//
+//        public void setOnClickListener(View.OnClickListener listener){
+//            this.mOnClickListener = listener;
+//        }
+//
+//        class TagViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+//
+//            TagContainerLayout tagContainerLayout;
+//            View.OnClickListener clickListener;
+//            Button button;
+//
+//            public TagViewHolder(View v, View.OnClickListener listener){
+//                super(v);
+//                this.clickListener = listener;
+//                tagContainerLayout = (TagContainerLayout) v.findViewById(R.id.tagcontainerLayout);
+//                button = (Button) v.findViewById(R.id.button);
+////                v.setOnClickListener(this);
+//            }
+//
+//            @Override
+//            public void onClick(View v) {
+//                if (clickListener != null){
+//                    clickListener.onClick(v);
+//                }
+//            }
+//        }
+//    }
 }
