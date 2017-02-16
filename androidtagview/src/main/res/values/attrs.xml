@@ -26,6 +26,8 @@
         <attr name="tag_text_color" format="color" />
         <attr name="tag_border_color" format="color" />
         <attr name="tag_background_color" format="color" />
+        <attr name="tag_selected_text_color" format="color" />
+        <attr name="tag_selected_background_color" format="color" />
         <attr name="tag_max_length" format="integer" />
         <attr name="tag_clickable" format="boolean" />
         <attr name="tag_theme" format="enum">

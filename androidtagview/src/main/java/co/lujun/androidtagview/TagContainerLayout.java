@@ -87,6 +87,12 @@ public class TagContainerLayout extends ViewGroup {
     /** TagView text color(default #FF666666)*/
     private int mTagTextColor = Color.parseColor("#FF666666");
 
+    /** TagView selected background color(default #33F443FF)*/
+    private int mTagSelectedBackgroundColor = Color.parseColor("#33F443FF");
+
+    /** TagView selected text color(default #FF6666FF)*/
+    private int mTagSelectedTextColor = Color.parseColor("#FF6666FF");
+
     /** TagView typeface*/
     private Typeface mTagTypeface = Typeface.DEFAULT;
 
@@ -204,6 +210,10 @@ public class TagContainerLayout extends ViewGroup {
         mTagBackgroundColor = attributes.getColor(R.styleable.AndroidTagView_tag_background_color,
                 mTagBackgroundColor);
         mTagTextColor = attributes.getColor(R.styleable.AndroidTagView_tag_text_color, mTagTextColor);
+
+        mTagSelectedTextColor = attributes.getColor(R.styleable.AndroidTagView_tag_selected_text_color, mTagSelectedTextColor);
+        mTagSelectedBackgroundColor = attributes.getColor(R.styleable.AndroidTagView_tag_selected_background_color, mTagSelectedBackgroundColor);
+
         mTagTextDirection = attributes.getInt(R.styleable.AndroidTagView_tag_text_direction, mTagTextDirection);
         isTagViewClickable = attributes.getBoolean(R.styleable.AndroidTagView_tag_clickable, false);
         mRippleColor = attributes.getColor(R.styleable.AndroidTagView_tag_ripple_color, Color.parseColor("#EEEEEE"));
@@ -431,6 +441,8 @@ public class TagContainerLayout extends ViewGroup {
         tagView.setTagBackgroundColor(colors[0]);
         tagView.setTagBorderColor(colors[1]);
         tagView.setTagTextColor(colors[2]);
+        tagView.setTagSelectedBackgroundColor(mTagSelectedBackgroundColor);
+        tagView.setTagSelectedTextColor(mTagSelectedTextColor);
         tagView.setTagMaxLength(mTagMaxLength);
         tagView.setTextDirection(mTagTextDirection);
         tagView.setTypeface(mTagTypeface);
@@ -1019,6 +1031,38 @@ public class TagContainerLayout extends ViewGroup {
      */
     public int getTagTextColor() {
         return mTagTextColor;
+    }
+
+    /**
+     * Get TagView selected background color.
+     * @return
+     */
+    public int getTagSelectedBackgroundColor() {
+        return mTagSelectedBackgroundColor;
+    }
+
+    /**
+     * Set TagView selected background color.
+     * @param color
+     */
+    public void setTagSelectedBackgroundColor(int color) {
+        this.mTagSelectedBackgroundColor = color;
+    }
+
+    /**
+     * Get TagView selected text color.
+     * @return
+     */
+    public int getTagSelectedTextColor() {
+        return mTagSelectedTextColor;
+    }
+
+    /**
+     * Set TagView selected text color.
+     * @param color
+     */
+    public void setTagSelectedTextColor(int color) {
+        this.mTagSelectedTextColor = color;
     }
 
     /**

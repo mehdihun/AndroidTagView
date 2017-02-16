@@ -24,6 +24,9 @@ import static co.lujun.androidtagview.Utils.sp2px;
  */
 public class TagView extends View {
 
+    /** Selected status **/
+    private boolean selected = false;
+
     /** Border width*/
     private float mBorderWidth;
 
@@ -47,6 +50,12 @@ public class TagView extends View {
 
     /** TagView text color*/
     private int mTextColor;
+
+    /** TagView selected background color*/
+    private int mSelectedBackgroundColor;
+
+    /** TagView selected text color*/
+    private int mSelectedTextColor;
 
     /** Whether this view clickable*/
     private boolean isViewClickable;
@@ -181,7 +190,7 @@ public class TagView extends View {
     protected void onDraw(Canvas canvas) {
         // draw background
         mPaint.setStyle(Paint.Style.FILL);
-        mPaint.setColor(mBackgroundColor);
+        mPaint.setColor(selected ? mSelectedBackgroundColor : mBackgroundColor);
         canvas.drawRoundRect(mRectF, mBorderRadius, mBorderRadius, mPaint);
 
         // draw border
@@ -195,7 +204,7 @@ public class TagView extends View {
 
         // draw text
         mPaint.setStyle(Paint.Style.FILL);
-        mPaint.setColor(mTextColor);
+        mPaint.setColor(selected ? mSelectedTextColor : mTextColor);
 
         if (mTextDirection == View.TEXT_DIRECTION_RTL){
             float tmpX = (isEnableCross() ? getWidth() + getHeight() : getWidth()) / 2 + fontW / 2;
@@ -252,6 +261,7 @@ public class TagView extends View {
             mTouchX = event.getX();
             mTouchY = event.getY();
             splashRipple();
+            selected = !selected;
         }
         if (isEnableCross() && isClickCrossArea(event) && mOnTagClickListener != null){
             if (action == MotionEvent.ACTION_DOWN) {
@@ -392,6 +402,14 @@ public class TagView extends View {
 
     public void setTagTextColor(int color){
         this.mTextColor = color;
+    }
+
+    public void setTagSelectedBackgroundColor(int color) {
+        this.mSelectedBackgroundColor = color;
+    }
+
+    public void setTagSelectedTextColor(int color) {
+        this.mSelectedTextColor = color;
     }
 
     public void setBorderWidth(float width) {
