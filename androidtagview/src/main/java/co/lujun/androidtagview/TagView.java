@@ -285,29 +285,24 @@ public class TagView extends View {
 
             Rect txtRect = new Rect();
             Paint mTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-            mTextPaint.setTextSize(40);
+            mTextPaint.setTextSize(sp2px(getContext(), 10));
             mTextPaint.getTextBounds(mBadgeText, 0, mBadgeText.length(), txtRect);
 
-            final Paint.FontMetrics fontMetrics = mPaint.getFontMetrics();
-            float badgeTextH = fontMetrics.descent - fontMetrics.ascent;
-            float badgeTextW = mPaint.measureText(mBadgeText);
-            float lineHeight = fontMetrics.bottom - fontMetrics.top + fontMetrics.leading;
+            float outterPadding = dp2px(getContext(), 5);
+            float badgeStroke = dp2px(getContext(), 2);
 
-            int outterPadding = 20;
-            int badgeStroke = 5;
-
-            float mBadgeBorderRadius = mBorderRadius;
             float marginPercentageH = 0.1f;
             float marginPercentageV = 0.1f;
             float badgeWidth = badgeStroke * 2 + txtRect.width() * (1 + marginPercentageH * 2);
             float badgeHeight = badgeStroke * 2 + txtRect.height() * (1 + marginPercentageV * 2);
+            float mBadgeBorderRadius = badgeHeight / 2;
 
             RectF mBadgeRectF = new RectF();
             mBadgeRectF.set(getWidth() - badgeWidth + outterPadding, -outterPadding, getWidth() + outterPadding, badgeHeight - outterPadding);
 
             // Change canvas inset to be able to draw outside the bounds
             Rect newRect = canvas.getClipBounds();
-            newRect.inset(-outterPadding, -outterPadding);
+            newRect.inset((int)(- outterPadding - badgeStroke),(int)(- outterPadding - badgeStroke));
             canvas.clipRect(newRect, Region.Op.REPLACE);
 
             // Draw badge background
@@ -367,6 +362,7 @@ public class TagView extends View {
             mTouchY = event.getY();
             splashRipple();
             selected = !selected;
+            requestLayout();
         }
         if (isEnableCross() && isClickCrossArea(event) && mOnTagClickListener != null) {
             if (action == MotionEvent.ACTION_DOWN) {
