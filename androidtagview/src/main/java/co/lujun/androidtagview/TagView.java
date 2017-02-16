@@ -183,7 +183,7 @@ public class TagView extends View {
                 int state = ((TagContainerLayout) getParent()).getTagViewState();
                 if (state == ViewDragHelper.STATE_IDLE) {
                     isExecLongClick = true;
-                    mOnTagClickListener.onTagLongClick((int) getTag(), getText());
+                    mOnTagClickListener.onTagLongClick((int) getTag(), selected, getText());
                 }
             }
         }
@@ -356,13 +356,10 @@ public class TagView extends View {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         int action = event.getAction();
-        if (action == MotionEvent.ACTION_UP) {
+        if (action == MotionEvent.ACTION_DOWN) {
             mRippleRadius = 0.0f;
             mTouchX = event.getX();
             mTouchY = event.getY();
-            splashRipple();
-            selected = !selected;
-            requestLayout();
         }
         if (isEnableCross() && isClickCrossArea(event) && mOnTagClickListener != null) {
             if (action == MotionEvent.ACTION_DOWN) {
@@ -394,7 +391,12 @@ public class TagView extends View {
                 case MotionEvent.ACTION_UP:
                     isUp = true;
                     if (!isExecLongClick && !isMoved) {
-                        mOnTagClickListener.onTagClick((int) getTag(), getText());
+
+                        splashRipple();
+                        selected = !selected;
+                        requestLayout();
+
+                        mOnTagClickListener.onTagClick((int) getTag(), selected, getText());
                     }
                     break;
             }
@@ -539,9 +541,9 @@ public class TagView extends View {
     }
 
     public interface OnTagClickListener {
-        void onTagClick(int position, String text);
+        void onTagClick(int position, boolean status, String text);
 
-        void onTagLongClick(int position, String text);
+        void onTagLongClick(int position, boolean status, String text);
 
         void onTagCrossClick(int position);
     }

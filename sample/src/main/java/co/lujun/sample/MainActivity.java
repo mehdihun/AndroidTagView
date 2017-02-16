@@ -69,13 +69,13 @@ public class MainActivity extends AppCompatActivity {
         // Set custom click listener
         mTagContainerLayout1.setOnTagClickListener(new TagView.OnTagClickListener() {
             @Override
-            public void onTagClick(int position, String text) {
+            public void onTagClick(int position, boolean selected, String text) {
                 Toast.makeText(MainActivity.this, "click-position:" + position + ", text:" + text,
                         Toast.LENGTH_SHORT).show();
             }
 
             @Override
-            public void onTagLongClick(final int position, String text) {
+            public void onTagLongClick(final int position, boolean selected, String text) {
                 AlertDialog dialog = new AlertDialog.Builder(MainActivity.this)
                         .setTitle("long click")
                         .setMessage("You will delete this tag!")
