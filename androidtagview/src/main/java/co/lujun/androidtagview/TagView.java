@@ -393,11 +393,11 @@ public class TagView extends View {
                     if (!isExecLongClick && !isMoved) {
 
                         splashRipple();
-                        tagSelected = !tagSelected;
+                        tagSelected = mOnTagClickListener.onTagClick((int) getTag(), !tagSelected, getText());
                         invalidate();
                         requestLayout();
 
-                        mOnTagClickListener.onTagClick((int) getTag(), tagSelected, getText());
+
                     }
                     break;
             }
@@ -542,7 +542,7 @@ public class TagView extends View {
     }
 
     public interface OnTagClickListener {
-        void onTagClick(int position, boolean status, String text);
+        boolean onTagClick(int position, boolean status, String text);
 
         void onTagLongClick(int position, boolean status, String text);
 

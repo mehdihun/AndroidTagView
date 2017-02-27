@@ -69,9 +69,10 @@ public class MainActivity extends AppCompatActivity {
         // Set custom click listener
         mTagContainerLayout1.setOnTagClickListener(new TagView.OnTagClickListener() {
             @Override
-            public void onTagClick(int position, boolean selected, String text) {
+            public boolean onTagClick(int position, boolean selected, String text) {
                 Toast.makeText(MainActivity.this, "click-position:" + position + ", text:" + text,
                         Toast.LENGTH_SHORT).show();
+                return selected;
             }
 
             @Override
