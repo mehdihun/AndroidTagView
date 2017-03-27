@@ -311,9 +311,9 @@ public class TagContainerLayout extends ViewGroup {
 
             if (childView instanceof TagView) {
                 TagView tv = (TagView) childView;
-                Log.v("TAGS", "Setting tags max width to " + availableW);
                 tv.setTagMaxWidth(availableW);
                 tv.invalidate();
+                tv.requestLayout();
             }
 
             if (childView.getVisibility() != GONE) {
