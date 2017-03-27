@@ -88,9 +88,9 @@ public class TagView extends View {
     private boolean isViewClickable;
 
     /**
-     * The max length for this tag view
+     * The max width for this tag view
      */
-    private int mTagMaxLength;
+    private int mTagMaxWidth;
 
     /**
      * OnTagClickListener for click action
@@ -206,25 +206,42 @@ public class TagView extends View {
     }
 
     private void onDealText() {
+
         if (!TextUtils.isEmpty(mOriginText)) {
-            mAbstractText = mOriginText.length() <= mTagMaxLength ? mOriginText
-                    : mOriginText.substring(0, mTagMaxLength - 3) + "...";
+            int height = mVerticalPadding * 2 + (int) fontH;
+            int maxW = mTagMaxWidth - mHorizontalPadding * 2 - (isEnableCross() ? height : 0);
+
+            // I know, I know... Adding this empty space here is not the most elegant solution.
+            // But on the other side, look how wonderful the rest of the do-while loop looks,
+            // it wouldn't be possible without this small-little-minor-trick, so let's get over it...
+            // AP :)
+            mAbstractText = mOriginText + " ";
+
+            do {
+                mAbstractText = mAbstractText.substring(0, mAbstractText.length() - 1);
+                if(mAbstractText.length() < mOriginText.length() && mAbstractText.length() > 3) {
+                    mAbstractText = mAbstractText.substring(0, mAbstractText.length()-4) + "...";
+                }
+
+                mPaint.setTypeface(mTypeface);
+                mPaint.setTextSize(mTextSize);
+                final Paint.FontMetrics fontMetrics = mPaint.getFontMetrics();
+                fontH = fontMetrics.descent - fontMetrics.ascent;
+                if (mTextDirection == View.TEXT_DIRECTION_RTL) {
+                    fontW = 0;
+                    for (char c : mAbstractText.toCharArray()) {
+                        String sc = String.valueOf(c);
+                        fontW += mPaint.measureText(sc);
+                    }
+                } else {
+                    fontW = mPaint.measureText(mAbstractText);
+                }
+            }
+            while (fontW > maxW && mAbstractText.length() > 0);
         } else {
             mAbstractText = "";
         }
-        mPaint.setTypeface(mTypeface);
-        mPaint.setTextSize(mTextSize);
-        final Paint.FontMetrics fontMetrics = mPaint.getFontMetrics();
-        fontH = fontMetrics.descent - fontMetrics.ascent;
-        if (mTextDirection == View.TEXT_DIRECTION_RTL) {
-            fontW = 0;
-            for (char c : mAbstractText.toCharArray()) {
-                String sc = String.valueOf(c);
-                fontW += mPaint.measureText(sc);
-            }
-        } else {
-            fontW = mPaint.measureText(mAbstractText);
-        }
+
     }
 
     @Override
@@ -487,8 +504,8 @@ public class TagView extends View {
         return isViewClickable;
     }
 
-    public void setTagMaxLength(int maxLength) {
-        this.mTagMaxLength = maxLength;
+    public void setTagMaxWidth(int maxWidth) {
+        this.mTagMaxWidth = maxWidth;
         onDealText();
     }
 

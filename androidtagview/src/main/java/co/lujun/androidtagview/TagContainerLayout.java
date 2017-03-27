@@ -354,6 +354,12 @@ public class TagContainerLayout extends ViewGroup {
         // layout all child views
         for (int i = 0; i < mViewPos.length / 2; i++) {
             View childView = getChildAt(i);
+
+            if(childView instanceof TagView) {
+                TagView tv = (TagView) childView;
+                tv.setTagMaxWidth(availableW);
+            }
+
             childView.layout(mViewPos[i * 2], mViewPos[i * 2 + 1],
                     mViewPos[i * 2] + childView.getMeasuredWidth(),
                     mViewPos[i * 2 + 1] + mChildHeight);
@@ -459,13 +465,14 @@ public class TagContainerLayout extends ViewGroup {
     }
 
     private void initTagView(TagView tagView){
+        int availableW = getMeasuredWidth() - getPaddingLeft() - getPaddingRight();
         int[] colors = onUpdateColorFactory();
         tagView.setTagBackgroundColor(colors[0]);
         tagView.setTagBorderColor(colors[1]);
         tagView.setTagTextColor(colors[2]);
         tagView.setTagSelectedBackgroundColor(mTagSelectedBackgroundColor);
         tagView.setTagSelectedTextColor(mTagSelectedTextColor);
-        tagView.setTagMaxLength(mTagMaxLength);
+        tagView.setTagMaxWidth(availableW);
         tagView.setTextDirection(mTagTextDirection);
         tagView.setTypeface(mTagTypeface);
         tagView.setBorderWidth(mTagBorderWidth);
