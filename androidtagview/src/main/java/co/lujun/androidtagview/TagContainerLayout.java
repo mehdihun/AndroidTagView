@@ -9,6 +9,7 @@ import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.support.v4.widget.ViewDragHelper;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.Pair;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -310,7 +311,9 @@ public class TagContainerLayout extends ViewGroup {
 
             if (childView instanceof TagView) {
                 TagView tv = (TagView) childView;
+                Log.v("TAGS", "Setting tags max width to " + availableW);
                 tv.setTagMaxWidth(availableW);
+                tv.invalidate();
             }
 
             if (childView.getVisibility() != GONE) {
