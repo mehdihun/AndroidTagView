@@ -307,6 +307,12 @@ public class TagContainerLayout extends ViewGroup {
 
         for (int i = 0; i < childCount; i++) {
             final View childView = getChildAt(i);
+
+            if (childView instanceof TagView) {
+                TagView tv = (TagView) childView;
+                tv.setTagMaxWidth(availableW);
+            }
+
             if (childView.getVisibility() != GONE) {
                 int width = childView.getMeasuredWidth();
                 if (mGravity == Gravity.RIGHT){
@@ -354,12 +360,6 @@ public class TagContainerLayout extends ViewGroup {
         // layout all child views
         for (int i = 0; i < mViewPos.length / 2; i++) {
             View childView = getChildAt(i);
-
-            if(childView instanceof TagView) {
-                TagView tv = (TagView) childView;
-                tv.setTagMaxWidth(availableW);
-            }
-
             childView.layout(mViewPos[i * 2], mViewPos[i * 2 + 1],
                     mViewPos[i * 2] + childView.getMeasuredWidth(),
                     mViewPos[i * 2 + 1] + mChildHeight);
