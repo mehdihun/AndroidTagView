@@ -500,7 +500,7 @@ public class TagContainerLayout extends ViewGroup {
         tagView.setBadgeSelectedStrokeColor(mTagBadgeSelectedStrokeColor);
     }
 
-    private void invalidateTags(){
+    public void invalidateTags(){
         for (View view : mChildViews) {
             final TagView tagView = (TagView) view;
             tagView.setOnTagClickListener(mOnTagClickListener);
