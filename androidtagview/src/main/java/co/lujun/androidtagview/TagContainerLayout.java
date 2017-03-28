@@ -312,8 +312,7 @@ public class TagContainerLayout extends ViewGroup {
             if (childView instanceof TagView) {
                 TagView tv = (TagView) childView;
                 tv.setTagMaxWidth(availableW);
-                tv.invalidate();
-                tv.requestLayout();
+                tv.measure(MeasureSpec.EXACTLY, MeasureSpec.EXACTLY);
             }
 
             if (childView.getVisibility() != GONE) {
@@ -407,6 +406,13 @@ public class TagContainerLayout extends ViewGroup {
         int lines = 1;
         for (int i = 0, curLineW = 0; i < childCount; i++) {
             View childView = getChildAt(i);
+
+            if (childView instanceof TagView) {
+                TagView tv = (TagView) childView;
+                tv.setTagMaxWidth(availableW);
+                tv.measure(MeasureSpec.EXACTLY, MeasureSpec.EXACTLY);
+            }
+
             int dis = childView.getMeasuredWidth() + mHorizontalInterval;
             int height = childView.getMeasuredHeight();
             mChildHeight = i == 0 ? height : Math.min(mChildHeight, height);
