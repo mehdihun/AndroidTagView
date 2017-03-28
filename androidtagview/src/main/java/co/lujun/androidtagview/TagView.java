@@ -247,6 +247,9 @@ public class TagView extends View {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        if(fontW == 0) {
+            onDealText();
+        }
         int height = mVerticalPadding * 2 + (int) fontH;
         int width = mHorizontalPadding * 2 + (int) fontW + (isEnableCross() ? height : 0);
         mCrossAreaWidth = Math.min(Math.max(mCrossAreaWidth, height), width);
