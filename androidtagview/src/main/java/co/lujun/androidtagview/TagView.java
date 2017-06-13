@@ -205,6 +205,14 @@ public class TagView extends View {
         mSlopThreshold = (int) dp2px(context, mSlopThreshold);
     }
 
+    public boolean isTagSelected() {
+        return tagSelected;
+    }
+
+    public void setTagSelected(boolean tagSelected) {
+        this.tagSelected = tagSelected;
+    }
+
     private void onDealText() {
 
         if (!TextUtils.isEmpty(mOriginText)) {
