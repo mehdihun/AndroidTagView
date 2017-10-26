@@ -126,6 +126,8 @@ public class TagView extends View {
 
     private RectF mRectF;
 
+    private RectF mRectTagF;
+
     private String mAbstractText, mOriginText;
 
     private boolean isUp, isMoved, isExecLongClick;
@@ -199,6 +201,7 @@ public class TagView extends View {
         mRipplePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mRipplePaint.setStyle(Paint.Style.FILL);
         mRectF = new RectF();
+        mRectTagF = new RectF();
         mPath = new Path();
         mOriginText = text == null ? "" : text;
         mMoveSlop = (int) dp2px(context, mMoveSlop);
@@ -255,7 +258,13 @@ public class TagView extends View {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        int height = mVerticalPadding * 2 + (int) fontH;
+
+        float outterPadding = dp2px(getContext(), 5);
+        float badgeStroke = dp2px(getContext(), 2);
+
+        int combined = (int) outterPadding + (int) badgeStroke;
+
+        int height = mVerticalPadding * 2 + (int) fontH + combined;
         int width = mHorizontalPadding * 2 + (int) fontW + (isEnableCross() ? height : 0);
         mCrossAreaWidth = Math.min(Math.max(mCrossAreaWidth, height), width);
         setMeasuredDimension(width, height);
@@ -265,20 +274,39 @@ public class TagView extends View {
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
         mRectF.set(mBorderWidth, mBorderWidth, w - mBorderWidth, h - mBorderWidth);
+
+        float outterPadding = dp2px(getContext(), 5);
+        float badgeStroke = dp2px(getContext(), 2);
+
+        int combined = (int) outterPadding + (int) badgeStroke;
+
+        mRectTagF.set(mBorderWidth, mBorderWidth + combined, w - mBorderWidth - combined, h - mBorderWidth);
+    }
+
+    public final int getTagHeight() {
+        return (int) mRectTagF.height();
+    }
+
+    public final int getTagWidth() {
+        return (int) mRectTagF.width();
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
+        float outterPadding = dp2px(getContext(), 5);
+        float badgeStroke = dp2px(getContext(), 2);
+        int combined = (int) outterPadding + (int) badgeStroke;
+
         // draw background
         mPaint.setStyle(Paint.Style.FILL);
         mPaint.setColor(tagSelected ? mSelectedBackgroundColor : mBackgroundColor);
-        canvas.drawRoundRect(mRectF, mBorderRadius, mBorderRadius, mPaint);
+        canvas.drawRoundRect(mRectTagF, mBorderRadius, mBorderRadius, mPaint);
 
         // draw border
         mPaint.setStyle(Paint.Style.STROKE);
         mPaint.setStrokeWidth(mBorderWidth);
         mPaint.setColor(mBorderColor);
-        canvas.drawRoundRect(mRectF, mBorderRadius, mBorderRadius, mPaint);
+        canvas.drawRoundRect(mRectTagF, mBorderRadius, mBorderRadius, mPaint);
 
         // draw ripple for TagView
         drawRipple(canvas);
@@ -288,16 +316,16 @@ public class TagView extends View {
         mPaint.setColor(tagSelected ? mSelectedTextColor : mTextColor);
 
         if (mTextDirection == View.TEXT_DIRECTION_RTL) {
-            float tmpX = (isEnableCross() ? getWidth() + getHeight() : getWidth()) / 2 + fontW / 2;
+            float tmpX = (isEnableCross() ? getTagWidth() + getTagHeight() : getTagWidth()) / 2 + fontW / 2;
             for (char c : mAbstractText.toCharArray()) {
                 String sc = String.valueOf(c);
                 tmpX -= mPaint.measureText(sc);
-                canvas.drawText(sc, tmpX, getHeight() / 2 + fontH / 2 - bdDistance, mPaint);
+                canvas.drawText(sc, tmpX, getTagHeight() / 2 + fontH / 2 - bdDistance + combined, mPaint);
             }
         } else {
             canvas.drawText(mAbstractText,
-                    (isEnableCross() ? getWidth() - getHeight() : getWidth()) / 2 - fontW / 2,
-                    getHeight() / 2 + fontH / 2 - bdDistance, mPaint);
+                    (isEnableCross() ? getTagWidth() - getTagHeight() : getTagWidth()) / 2 - fontW / 2,
+                    getTagHeight() / 2 + fontH / 2 - bdDistance + combined, mPaint);
         }
 
         // draw cross
@@ -313,9 +341,6 @@ public class TagView extends View {
             mTextPaint.setTextSize(sp2px(getContext(), 10));
             mTextPaint.getTextBounds(mBadgeText, 0, mBadgeText.length(), txtRect);
 
-            float outterPadding = dp2px(getContext(), 5);
-            float badgeStroke = dp2px(getContext(), 2);
-
             float marginPercentageH = 0.1f;
             float marginPercentageV = 0.1f;
             float badgeWidth = badgeStroke * 2 + txtRect.width() * (1 + marginPercentageH * 2);
@@ -323,12 +348,7 @@ public class TagView extends View {
             float mBadgeBorderRadius = badgeHeight / 2;
 
             RectF mBadgeRectF = new RectF();
-            mBadgeRectF.set(getWidth() - badgeWidth + outterPadding, -outterPadding, getWidth() + outterPadding, badgeHeight - outterPadding);
-
-            // Change canvas inset to be able to draw outside the bounds
-            Rect newRect = canvas.getClipBounds();
-            newRect.inset((int)(- outterPadding - badgeStroke),(int)(- outterPadding - badgeStroke));
-            canvas.clipRect(newRect, Region.Op.REPLACE);
+            mBadgeRectF.set(getWidth() - badgeWidth - badgeStroke * 2, badgeStroke, getWidth() - badgeStroke * 2, badgeHeight + badgeStroke);
 
             // Draw badge background
             mPaint.setStyle(Paint.Style.FILL);
@@ -440,31 +460,37 @@ public class TagView extends View {
 
     private void drawCross(Canvas canvas) {
         if (isEnableCross()) {
-            mCrossAreaPadding = mCrossAreaPadding > getHeight() / 2 ? getHeight() / 2 :
+            mCrossAreaPadding = mCrossAreaPadding > getTagHeight() / 2 ? getTagHeight() / 2 :
                     mCrossAreaPadding;
             int ltX, ltY, rbX, rbY, lbX, lbY, rtX, rtY;
             ltX = mTextDirection == View.TEXT_DIRECTION_RTL ? (int) (mCrossAreaPadding) :
-                    (int) (getWidth() - getHeight() + mCrossAreaPadding);
+                    (int) (getTagWidth() - getTagHeight() + mCrossAreaPadding);
             ltY = mTextDirection == View.TEXT_DIRECTION_RTL ? (int) (mCrossAreaPadding) :
                     (int) (mCrossAreaPadding);
             lbX = mTextDirection == View.TEXT_DIRECTION_RTL ? (int) (mCrossAreaPadding) :
-                    (int) (getWidth() - getHeight() + mCrossAreaPadding);
+                    (int) (getTagWidth() - getTagHeight() + mCrossAreaPadding);
             lbY = mTextDirection == View.TEXT_DIRECTION_RTL ?
-                    (int) (getHeight() - mCrossAreaPadding) : (int) (getHeight() - mCrossAreaPadding);
+                    (int) (getTagHeight() - mCrossAreaPadding) : (int) (getTagHeight() - mCrossAreaPadding);
             rtX = mTextDirection == View.TEXT_DIRECTION_RTL ?
-                    (int) (getHeight() - mCrossAreaPadding) : (int) (getWidth() - mCrossAreaPadding);
+                    (int) (getTagHeight() - mCrossAreaPadding) : (int) (getTagWidth() - mCrossAreaPadding);
             rtY = mTextDirection == View.TEXT_DIRECTION_RTL ? (int) (mCrossAreaPadding) :
                     (int) (mCrossAreaPadding);
             rbX = mTextDirection == View.TEXT_DIRECTION_RTL ?
-                    (int) (getHeight() - mCrossAreaPadding) : (int) (getWidth() - mCrossAreaPadding);
+                    (int) (getTagHeight() - mCrossAreaPadding) : (int) (getTagWidth() - mCrossAreaPadding);
             rbY = mTextDirection == View.TEXT_DIRECTION_RTL ?
-                    (int) (getHeight() - mCrossAreaPadding) : (int) (getHeight() - mCrossAreaPadding);
+                    (int) (getTagHeight() - mCrossAreaPadding) : (int) (getTagHeight() - mCrossAreaPadding);
 
             mPaint.setStyle(Paint.Style.STROKE);
             mPaint.setColor(mCrossColor);
             mPaint.setStrokeWidth(mCrossLineWidth);
-            canvas.drawLine(ltX, ltY, rbX, rbY, mPaint);
-            canvas.drawLine(lbX, lbY, rtX, rtY, mPaint);
+
+            float outterPadding = dp2px(getContext(), 5);
+            float badgeStroke = dp2px(getContext(), 2);
+
+            int combined = (int) outterPadding + (int) badgeStroke;
+
+            canvas.drawLine(ltX, ltY + combined, rbX, rbY + combined, mPaint);
+            canvas.drawLine(lbX, lbY + combined, rtX, rtY + combined, mPaint);
         }
     }
 
@@ -475,7 +501,7 @@ public class TagView extends View {
             mPath.reset();
 
             canvas.clipPath(mPath);
-            mPath.addRoundRect(mRectF, mBorderRadius, mBorderRadius, Path.Direction.CCW);
+            mPath.addRoundRect(mRectTagF, mBorderRadius, mBorderRadius, Path.Direction.CCW);
 
             canvas.clipPath(mPath, Region.Op.REPLACE);
             canvas.drawCircle(mTouchX, mTouchY, mRippleRadius, mRipplePaint);
